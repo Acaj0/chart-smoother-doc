@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 const INITIAL_POINTS = [
   [0, 0],
@@ -16,34 +16,59 @@ export default function ChartSection() {
   const [stringPoints, setStringPoints] = useState(JSON.stringify(points));
   const [stringPointsError, setStringPointsError] = useState(false);
 
-  useEffect(() => {}, [stringPoints]);
+  useEffect(() => {
+    const parsedPoints = handleStringPointsChange(
+      stringPoints,
+      setStringPointsError
+    );
+    if (parsedPoints) {
+      setPoints(parsedPoints);
+    }
+  }, [stringPoints]);
 
   /**@todo: Validar stringsPoints. stringsPoints deve ser sempre um string de uma matriz de números */
   /**@todo: Em caso de erro na validação: altere o text field para modo "erro" ( vermelho e com aviso ) */
 
   return (
     <>
-      <div>CHART DIV</div>
+      <div>CHART</div>
 
       <div>
         <label className="flex flex-col text-[#7C7C7C] font-semibold text-lg">
           Points
           <input
-            className="border-grey border-2 rounded-lg h-20 w-96"
+            className={`${
+              stringPointsError ? "border-red" : "border-grey"
+            } border-2 rounded-lg h-20 w-96`}
             name="myInput"
             value={stringPoints}
             onChange={(event) => setStringPoints(event.target.value)}
           />
           {/**@todo: Add a help text ? Ex: [x,y] array */}
         </label>
+        {stringPointsError ? "ERRO" : ""}
       </div>
     </>
   );
 }
 
-function handleStringPointsChange(stringPoints: string) {
+function handleStringPointsChange(
+  stringPoints: string,
+  setStringPointsError: Dispatch<SetStateAction<boolean>>
+) {
   try {
-  } catch (error) {}
+    const points = JSON.parse(stringPoints);
+    const pointsValidated = validatePoints(points);
+    if (!pointsValidated) {
+      setStringPointsError(true);
+    } else {
+      setStringPointsError(false);
+    }
+
+    return points;
+  } catch (error) {
+    setStringPointsError(true);
+  }
 }
 
 function validatePoints(points: any) {
