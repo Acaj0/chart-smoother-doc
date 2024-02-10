@@ -1,6 +1,28 @@
 "use client";
 
+import { chartSmoother } from "chart-smoother";
+import {
+  CategoryScale,
+  Chart,
+  Legend,
+  LineElement,
+  LinearScale,
+  PointElement,
+  Title,
+  Tooltip,
+} from "chart.js";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Line } from "react-chartjs-2";
+
+Chart.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const INITIAL_POINTS = [
   [0, 0],
@@ -29,9 +51,44 @@ export default function ChartSection() {
   /**@todo: Validar stringsPoints. stringsPoints deve ser sempre um string de uma matriz de números */
   /**@todo: Em caso de erro na validação: altere o text field para modo "erro" ( vermelho e com aviso ) */
 
+  const originalX = points.map((p) => p[1]);
+  const originalY = points.map((p) => p[0]);
+
+  const smoothedPoints = chartSmoother(points);
+  const smoothedX = smoothedPoints.map((p) => p[1]);
+  const smoothedY = smoothedPoints.map((p) => p[0]);
+
   return (
-    <>
-      <div>CHART</div>
+    <div className="px-24">
+      <div className="flex justify-between">
+        <div className="w-[1000px]">
+          <Line
+            data={{
+              labels: originalY,
+              datasets: [
+                {
+                  label: "Original",
+                  data: originalX,
+                },
+              ],
+            }}
+          />
+        </div>
+
+        <div className="w-[1000px]">
+          <Line
+            data={{
+              labels: smoothedY,
+              datasets: [
+                {
+                  label: "Smoothed",
+                  data: smoothedX,
+                },
+              ],
+            }}
+          />
+        </div>
+      </div>
 
       <div>
         <label className="flex flex-col text-[#7C7C7C] font-semibold text-lg">
@@ -48,7 +105,7 @@ export default function ChartSection() {
         </label>
         {stringPointsError ? "ERRO" : ""}
       </div>
-    </>
+    </div>
   );
 }
 
