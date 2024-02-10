@@ -1,5 +1,6 @@
 "use client";
 
+import { Slider } from "@mui/material";
 import { chartSmoother } from "chart-smoother";
 import {
   CategoryScale,
@@ -37,6 +38,8 @@ export default function ChartSection() {
   const [points, setPoints] = useState(INITIAL_POINTS);
   const [stringPoints, setStringPoints] = useState(JSON.stringify(points));
   const [stringPointsError, setStringPointsError] = useState(false);
+  const [smoothedPoints, setSmoothedPoints] = useState(chartSmoother(points));
+  const [smoothIterations, setSmoothIterations] = useState(3);
 
   useEffect(() => {
     const parsedPoints = handleStringPointsChange(
@@ -48,13 +51,18 @@ export default function ChartSection() {
     }
   }, [stringPoints]);
 
+  useEffect(() => {
+    setSmoothedPoints(chartSmoother(points, smoothIterations));
+    console.log(smoothedPoints);
+    console.log("points", points);
+  }, [points, smoothedPoints]);
+
   /**@todo: Validar stringsPoints. stringsPoints deve ser sempre um string de uma matriz de números */
   /**@todo: Em caso de erro na validação: altere o text field para modo "erro" ( vermelho e com aviso ) */
 
   const originalX = points.map((p) => p[1]);
   const originalY = points.map((p) => p[0]);
 
-  const smoothedPoints = chartSmoother(points);
   const smoothedX = smoothedPoints.map((p) => p[1]);
   const smoothedY = smoothedPoints.map((p) => p[0]);
 
@@ -63,12 +71,22 @@ export default function ChartSection() {
       <div className="flex justify-between">
         <div className="w-[1000px]">
           <Line
+            options={{
+              animation: false,
+              scales: {
+                x: {
+                  display: false, // Hide X axis labels
+                },
+              },
+            }}
             data={{
               labels: originalY,
               datasets: [
                 {
                   label: "Original",
                   data: originalX,
+                  borderColor: "#E71D36",
+                  backgroundColor: "#E71D36",
                 },
               ],
             }}
@@ -77,12 +95,22 @@ export default function ChartSection() {
 
         <div className="w-[1000px]">
           <Line
+            options={{
+              animation: false,
+              scales: {
+                x: {
+                  display: false, // Hide X axis labels
+                },
+              },
+            }}
             data={{
               labels: smoothedY,
               datasets: [
                 {
                   label: "Smoothed",
                   data: smoothedX,
+                  borderColor: "#011627",
+                  backgroundColor: "#011627",
                 },
               ],
             }}
@@ -104,6 +132,22 @@ export default function ChartSection() {
           {/**@todo: Add a help text ? Ex: [x,y] array */}
         </label>
         {stringPointsError ? "ERRO" : ""}
+      </div>
+      <div className="w-96">
+        <label className="flex flex-col text-[#7C7C7C] font-semibold text-lg">
+          Iterations
+        </label>
+        <Slider
+          defaultValue={3}
+          valueLabelDisplay="auto"
+          step={1}
+          marks
+          min={1}
+          max={5}
+          onChange={(e, v) => {
+            setSmoothIterations(v as number);
+          }}
+        />
       </div>
     </div>
   );
