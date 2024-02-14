@@ -57,9 +57,6 @@ export default function ChartSection() {
     console.log("points", points);
   }, [points, smoothedPoints]);
 
-  /**@todo: Validar stringsPoints. stringsPoints deve ser sempre um string de uma matriz de números */
-  /**@todo: Em caso de erro na validação: altere o text field para modo "erro" ( vermelho e com aviso ) */
-
   const originalX = points.map((p) => p[1]);
   const originalY = points.map((p) => p[0]);
 
@@ -67,7 +64,7 @@ export default function ChartSection() {
   const smoothedY = smoothedPoints.map((p) => p[0]);
 
   return (
-    <div className="px-24">
+    <div className="px-24 flex flex-col place-items-center">
       <div className="flex justify-between">
         <div className="w-[1000px]">
           <Line
@@ -118,36 +115,43 @@ export default function ChartSection() {
         </div>
       </div>
 
-      <div>
-        <label className="flex flex-col text-[#7C7C7C] font-semibold text-lg">
-          Points
-          <input
-            className={`${
-              stringPointsError ? "border-red" : "border-grey"
-            } border-2 rounded-lg h-20 w-96`}
-            name="myInput"
-            value={stringPoints}
-            onChange={(event) => setStringPoints(event.target.value)}
-          />
-          {/**@todo: Add a help text ? Ex: [x,y] array */}
-        </label>
-        {stringPointsError ? "ERRO" : ""}
-      </div>
+      <div className="h-20" />
+
       <div className="w-96">
-        <label className="flex flex-col text-[#7C7C7C] font-semibold text-lg">
-          Iterations
-        </label>
-        <Slider
-          defaultValue={3}
-          valueLabelDisplay="auto"
-          step={1}
-          marks
-          min={1}
-          max={5}
-          onChange={(e, v) => {
-            setSmoothIterations(v as number);
-          }}
-        />
+        <div>
+          <label className="flex flex-col text-[#7C7C7C] font-semibold text-lg">
+            Points
+            <input
+              className={`${
+                stringPointsError ? "border-red" : "border-grey"
+              } border-2 rounded-lg h-20 w-96`}
+              name="myInput"
+              value={stringPoints}
+              onChange={(event) => setStringPoints(event.target.value)}
+            />
+          </label>
+          <p className={stringPointsError ? "text-red" : "text-[#7C7C7C]"}>
+            {stringPointsError
+              ? "Invalid Input Format: Please input an array of arrays, with each internal array containing two numbers representing the y and x coordinates of a linear graph."
+              : "[y, x] Array"}
+          </p>
+        </div>
+        <div className="w-96">
+          <label className="flex flex-col text-[#7C7C7C] font-semibold text-lg">
+            Iterations
+          </label>
+          <Slider
+            defaultValue={3}
+            valueLabelDisplay="auto"
+            step={1}
+            marks
+            min={1}
+            max={5}
+            onChange={(e, v) => {
+              setSmoothIterations(v as number);
+            }}
+          />
+        </div>
       </div>
     </div>
   );
