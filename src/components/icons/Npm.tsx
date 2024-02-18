@@ -1,6 +1,6 @@
 export default function Npm() {
   return (
-    <a href="https://www.npmjs.com/package/chart-smoother">
+    <a href="https://www.npmjs.com/package/chart-smoother?activeTab=readme">
       <svg
         width="36"
         height="36"
