@@ -1,29 +1,20 @@
 "use client";
 
-import { Slider } from "@mui/material";
 import { chartSmoother } from "chart-smoother";
-import {
-  CategoryScale,
-  Chart,
-  Legend,
-  LineElement,
-  LinearScale,
-  PointElement,
-  Title,
-  Tooltip,
-} from "chart.js";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { Line } from "react-chartjs-2";
 
-Chart.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import {
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
   Tooltip,
-  Legend
-);
+  XAxis,
+  YAxis,
+} from "recharts";
+import { Label } from "./ui/label";
+import { Slider } from "./ui/slider";
+import { Textarea } from "./ui/textarea";
 
 const INITIAL_POINTS = [
   [0, 0],
@@ -53,103 +44,107 @@ export default function ChartSection() {
 
   useEffect(() => {
     setSmoothedPoints(chartSmoother(points, smoothIterations));
-    console.log(smoothedPoints);
-    console.log("points", points);
-  }, [points, smoothedPoints]);
+  }, [points, smoothIterations]);
 
-  const originalX = points.map((p) => p[1]);
-  const originalY = points.map((p) => p[0]);
+  const originalData: { x: number; y: number }[] = points.map((point) => ({
+    x: point[0],
+    y: point[1],
+  }));
 
-  const smoothedX = smoothedPoints.map((p) => p[1]);
-  const smoothedY = smoothedPoints.map((p) => p[0]);
+  const smoothedData: { x: number; y: number }[] = smoothedPoints.map(
+    (point) => ({
+      x: point[0],
+      y: point[1],
+    })
+  );
 
   return (
-    <div className="px-24 flex flex-col place-items-center">
-      <div className="flex justify-between">
-        <div className="w-[1000px]">
+    <div className="flex flex-col place-items-center mt-20">
+      <div className="flex">
+        <LineChart width={730} height={250}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="x" hide />
+          <YAxis />
+          <Tooltip />
           <Line
-            options={{
-              animation: false,
-              scales: {
-                x: {
-                  display: false, // Hide X axis labels
-                },
-              },
-            }}
-            data={{
-              labels: originalY,
-              datasets: [
-                {
-                  label: "Original",
-                  data: originalX,
-                  borderColor: "#E71D36",
-                  backgroundColor: "#E71D36",
-                },
-              ],
+            type="linear"
+            data={originalData}
+            name="Original"
+            dataKey="y"
+            strokeWidth={2}
+            style={
+              {
+                stroke: "var(--theme-destructive)",
+                "--theme-destructive": "hsl(var(--destructive))",
+              } as React.CSSProperties
+            }
+            activeDot={{
+              r: 8,
+              style: { fill: "#E71D36" },
             }}
           />
-        </div>
+          <Legend />
+        </LineChart>
 
-        <div className="w-[1000px]">
+        <LineChart width={730} height={250}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="x" hide />
+          <YAxis />
+          <Tooltip />
           <Line
-            options={{
-              animation: false,
-              scales: {
-                x: {
-                  display: false, // Hide X axis labels
-                },
-              },
-            }}
-            data={{
-              labels: smoothedY,
-              datasets: [
-                {
-                  label: "Smoothed",
-                  data: smoothedX,
-                  borderColor: "#011627",
-                  backgroundColor: "#011627",
-                },
-              ],
+            type="linear"
+            data={smoothedData}
+            dataKey="y"
+            name="Smoothed"
+            strokeWidth={2}
+            style={
+              {
+                stroke: "var(--theme-primary)",
+                "--theme-primary": "hsl(var(--primary))",
+              } as React.CSSProperties
+            }
+            activeDot={{
+              r: 8,
+              style: { fill: "var(--theme-primary)" },
             }}
           />
-        </div>
+          <Legend />
+        </LineChart>
       </div>
 
       <div className="h-20" />
 
       <div className="w-96">
         <div>
-          <label className="flex flex-col text-[#7C7C7C] font-semibold text-lg">
-            Points
-            <input
-              className={`${
-                stringPointsError ? "border-red" : "border-grey"
-              } border-2 rounded-lg h-20 w-96`}
-              name="myInput"
-              value={stringPoints}
-              onChange={(event) => setStringPoints(event.target.value)}
-            />
-          </label>
-          <p className={stringPointsError ? "text-red" : "text-[#7C7C7C]"}>
+          <Label>Points</Label>
+
+          <Textarea
+            value={stringPoints}
+            className={`${
+              stringPointsError ? "border-destructive" : "border-grey"
+            } my-2`}
+            onChange={(event) => setStringPoints(event.target.value)}
+          />
+          <p
+            className={`text-sm ${
+              stringPointsError ? "text-destructive" : "text-muted-foreground"
+            }`}
+          >
             {stringPointsError
-              ? "Invalid Input Format: Please input an array of arrays, with each internal array containing two numbers representing the y and x coordinates of a linear graph."
-              : "[y, x] Array"}
+              ? "Invalid Input Format: Please input an array of arrays, with each internal array containing two numbers representing the x and y coordinates of a linear graph."
+              : "[x, y] Array"}
           </p>
         </div>
-        <div className="w-96">
-          <label className="flex flex-col text-[#7C7C7C] font-semibold text-lg">
-            Iterations
-          </label>
+        <div className="w-96 mt-5">
+          <Label>Iterations</Label>
+
           <Slider
-            defaultValue={3}
-            valueLabelDisplay="auto"
+            className="mt-3"
+            defaultValue={[3]}
             step={1}
-            marks
             min={1}
             max={5}
-            onChange={(e, v) => {
-              setSmoothIterations(v as number);
-            }}
+            onValueChange={(v) => setSmoothIterations(v[0])}
           />
         </div>
       </div>
