@@ -136,7 +136,10 @@ export default function ChartSection() {
           </p>
         </div>
         <div className="w-96 mt-5">
-          <Label>Iterations</Label>
+          <div className="flex justify-between items-center">
+            <Label>Iterations</Label>
+            <p className="text-muted-foreground">{smoothIterations}</p>
+          </div>
 
           <Slider
             className="mt-3"
