@@ -27,7 +27,7 @@ export default function Home() {
       </div>
 
       <div className="flex justify-center">
-        <div className="px-24 pb-5 w-[800px]">
+        <div className="px-24 pb-10 w-[800px]">
           <section>
             <a
               id="installation"

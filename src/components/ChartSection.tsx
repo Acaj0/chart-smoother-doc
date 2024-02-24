@@ -13,6 +13,7 @@ import {
   YAxis,
 } from "recharts";
 import { Label } from "./ui/label";
+import { Skeleton } from "./ui/skeleton";
 import { Slider } from "./ui/slider";
 import { Textarea } from "./ui/textarea";
 
@@ -26,11 +27,16 @@ const INITIAL_POINTS = [
 ];
 
 export default function ChartSection() {
+  const [isClient, setIsClient] = useState(false);
   const [points, setPoints] = useState(INITIAL_POINTS);
   const [stringPoints, setStringPoints] = useState(JSON.stringify(points));
   const [stringPointsError, setStringPointsError] = useState(false);
   const [smoothedPoints, setSmoothedPoints] = useState(chartSmoother(points));
   const [smoothIterations, setSmoothIterations] = useState(3);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     const parsedPoints = handleStringPointsChange(
@@ -60,57 +66,64 @@ export default function ChartSection() {
 
   return (
     <div className="flex flex-col place-items-center mt-20">
-      <div className="flex">
-        <LineChart width={730} height={250}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="x" hide />
-          <YAxis />
-          <Tooltip />
-          <Line
-            type="linear"
-            data={originalData}
-            name="Original"
-            dataKey="y"
-            strokeWidth={2}
-            style={
-              {
-                stroke: "var(--theme-destructive)",
-                "--theme-destructive": "hsl(var(--destructive))",
-              } as React.CSSProperties
-            }
-            activeDot={{
-              r: 8,
-              style: { fill: "#E71D36" },
-            }}
-          />
-          <Legend />
-        </LineChart>
+      {isClient ? (
+        <div className="flex">
+          <LineChart width={730} height={250}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="x" hide />
+            <YAxis />
+            <Tooltip />
+            <Line
+              type="linear"
+              data={originalData}
+              name="Original"
+              dataKey="y"
+              strokeWidth={2}
+              style={
+                {
+                  stroke: "var(--theme-destructive)",
+                  "--theme-destructive": "hsl(var(--destructive))",
+                } as React.CSSProperties
+              }
+              activeDot={{
+                r: 8,
+                style: { fill: "#E71D36" },
+              }}
+            />
+            <Legend />
+          </LineChart>
 
-        <LineChart width={730} height={250}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="x" hide />
-          <YAxis />
-          <Tooltip />
-          <Line
-            type="linear"
-            data={smoothedData}
-            dataKey="y"
-            name="Smoothed"
-            strokeWidth={2}
-            style={
-              {
-                stroke: "var(--theme-primary)",
-                "--theme-primary": "hsl(var(--primary))",
-              } as React.CSSProperties
-            }
-            activeDot={{
-              r: 8,
-              style: { fill: "var(--theme-primary)" },
-            }}
-          />
-          <Legend />
-        </LineChart>
-      </div>
+          <LineChart width={730} height={250}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="x" hide />
+            <YAxis />
+            <Tooltip />
+            <Line
+              type="linear"
+              data={smoothedData}
+              dataKey="y"
+              name="Smoothed"
+              strokeWidth={2}
+              style={
+                {
+                  stroke: "var(--theme-primary)",
+                  "--theme-primary": "hsl(var(--primary))",
+                } as React.CSSProperties
+              }
+              activeDot={{
+                r: 8,
+                style: { fill: "var(--theme-primary)" },
+              }}
+            />
+            <Legend />
+          </LineChart>
+        </div>
+      ) : (
+        <div className="flex justify-between w-[1460px]">
+          <Skeleton className="h-[250px] w-[700px] rounded-xl" />
+          <Skeleton className="h-[250px] w-[700px] rounded-xl" />
+        </div>
+      )}
 
       <div className="h-20" />
 
