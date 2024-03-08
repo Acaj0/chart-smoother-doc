@@ -1,4 +1,3 @@
-import CodeBlock from "@/components/CodeBlock";
 import PageHeader from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
 
@@ -7,27 +6,29 @@ export default function Home() {
     <>
       <PageHeader />
 
-      <div className="px-24 text-center mt-20 mb-20">
+      <div className="px-3 md:px-24 text-center mt-10 md:mt-20 mb-20">
         <div>
-          <h1 className="font-extrabold tracking-tight text-6xl">
+          <h1 className="font-extrabold tracking-tight text-4xl md:text-6xl">
             chart-smoother
           </h1>
           <p className="mt-1 text-muted-foreground">
             A package for smoothing datasets of linear charts
           </p>
-          <div className="flex justify-center gap-3 mt-6">
+          <div className="flex flex-col md:flex-row md:justify-center gap-10 md:gap-3 mt-10 md:mt-6">
             <a href="/playground">
-              <Button>Playground</Button>
+              <Button className="w-24">Playground</Button>
             </a>
             <a href="https://github.com/Murilo-Luciano/chart-smoother">
-              <Button variant="outline">Github</Button>
+              <Button className="w-24" variant="outline">
+                Github
+              </Button>
             </a>
           </div>
         </div>
       </div>
 
       <div className="flex justify-center">
-        <div className="px-24 pb-10 w-[800px]">
+        <div className="px-6 md:px-24 pb-10 md:w-[800px]">
           <section>
             <a
               id="installation"
@@ -36,10 +37,10 @@ export default function Home() {
             >
               Installation
             </a>
-            <CodeBlock codeText="npm install chart-smoother" />
+            {/* <CodeBlock codeText="npm install chart-smoother" /> */}
           </section>
 
-          <section className="mt-10">
+          <section className="mt-5 md:mt-10">
             <a
               id="usage"
               href="#usage"
@@ -89,7 +90,7 @@ export default function Home() {
               Here's an example of how to use the chart-smoother module:
             </p>
             <br />
-            <CodeBlock codeText={usageSnippet} />
+            {/* <CodeBlock codeText={usageSnippet} /> */}
           </section>
         </div>
       </div>
