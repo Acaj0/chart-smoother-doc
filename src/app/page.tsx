@@ -1,3 +1,4 @@
+import CodeBlock from "@/components/CodeBlock";
 import PageHeader from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
 
@@ -37,7 +38,7 @@ export default function Home() {
             >
               Installation
             </a>
-            {/* <CodeBlock codeText="npm install chart-smoother" /> */}
+            <CodeBlock codeText="npm install chart-smoother" />
           </section>
 
           <section className="mt-5 md:mt-10">
@@ -90,7 +91,7 @@ export default function Home() {
               Here's an example of how to use the chart-smoother module:
             </p>
             <br />
-            {/* <CodeBlock codeText={usageSnippet} /> */}
+            <CodeBlock codeText={usageSnippet} />
           </section>
         </div>
       </div>
