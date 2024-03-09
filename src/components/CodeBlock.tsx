@@ -21,7 +21,7 @@ export default function CodeBlock({ codeText }: { codeText: string }) {
         <code>
           <pre>{codeText}</pre>
         </code>
-        <ScrollBar orientation="horizontal" />
+        <ScrollBar orientation="horizontal" forceMount={true} />
       </ScrollArea>
 
       <Button
