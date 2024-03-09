@@ -65,7 +65,7 @@ export default function ChartSection() {
   );
 
   return (
-    <div className="flex flex-col place-items-center mt-20">
+    <div className="flex flex-col place-items-center mt-10 md:mt-20">
       {isClient ? (
         <div className="-ml-10 ">
           <div className="gap-4 md:hidden">
@@ -107,9 +107,8 @@ export default function ChartSection() {
         </div>
       )}
 
-      <div className="h-8 md:h-20" />
+      <div className="h-6 md:h-20" />
 
-      {/* <div className="w-96"> */}
       <div className="w-80 md:w-96">
         <div>
           <Label>Points</Label>
@@ -131,8 +130,7 @@ export default function ChartSection() {
               : "[x, y] Array"}
           </p>
         </div>
-        {/* <div className="w-96 mt-5"> */}
-        <div className="mt-5">
+        <div className="mt-5 mb-10">
           <div className="flex justify-between items-center">
             <Label>Iterations</Label>
             <p className="text-muted-foreground">{smoothIterations}</p>
