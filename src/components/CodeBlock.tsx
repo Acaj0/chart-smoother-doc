@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
+import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 
 export default function CodeBlock({ codeText }: { codeText: string }) {
   const [copied, setCopied] = useState(false);
@@ -16,9 +17,13 @@ export default function CodeBlock({ codeText }: { codeText: string }) {
 
   return (
     <div className="flex bg-muted text-primary items-center justify-between px-2 py-1 shadow-xl border border-foreground rounded-lg">
-      <code>
-        <pre>{codeText}</pre>
-      </code>
+      <ScrollArea className="w-[300px] md:w-full">
+        <code>
+          <pre>{codeText}</pre>
+        </code>
+        <ScrollBar orientation="horizontal" forceMount={true} />
+      </ScrollArea>
+
       <Button
         variant="outline"
         size="icon"

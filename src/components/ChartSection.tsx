@@ -67,67 +67,50 @@ export default function ChartSection() {
   return (
     <div className="flex flex-col place-items-center mt-20">
       {isClient ? (
-        <div className="flex">
-          <LineChart width={730} height={250}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="x" hide />
-            <YAxis />
-            <Tooltip />
-            <Line
-              type="linear"
-              data={originalData}
-              name="Original"
-              dataKey="y"
-              strokeWidth={2}
-              style={
-                {
-                  stroke: "var(--theme-destructive)",
-                  "--theme-destructive": "hsl(var(--destructive))",
-                } as React.CSSProperties
-              }
-              activeDot={{
-                r: 8,
-                style: { fill: "#E71D36" },
-              }}
+        <div className="-ml-10 ">
+          <div className="gap-4 md:hidden">
+            <Chart
+              title="Original"
+              dataSet={originalData}
+              variant="destructive"
+              isMobile
             />
-            <Legend />
-          </LineChart>
 
-          <LineChart width={730} height={250}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="x" hide />
-            <YAxis />
-            <Tooltip />
-            <Line
-              type="linear"
-              data={smoothedData}
-              dataKey="y"
-              name="Smoothed"
-              strokeWidth={2}
-              style={
-                {
-                  stroke: "var(--theme-primary)",
-                  "--theme-primary": "hsl(var(--primary))",
-                } as React.CSSProperties
-              }
-              activeDot={{
-                r: 8,
-                style: { fill: "var(--theme-primary)" },
-              }}
+            <Chart
+              title="Smoothed"
+              dataSet={smoothedData}
+              variant="primary"
+              isMobile
             />
-            <Legend />
-          </LineChart>
+          </div>
+
+          <div className="hidden md:flex">
+            <Chart
+              title="Original"
+              dataSet={originalData}
+              variant="destructive"
+              isMobile={false}
+            />
+
+            <Chart
+              title="Smoothed"
+              dataSet={smoothedData}
+              variant="primary"
+              isMobile={false}
+            />
+          </div>
         </div>
       ) : (
-        <div className="flex justify-between w-[1460px]">
-          <Skeleton className="h-[250px] w-[700px] rounded-xl" />
-          <Skeleton className="h-[250px] w-[700px] rounded-xl" />
+        <div className="flex flex-col gap-4 md:flex-row md:w-[1460px]">
+          <Skeleton className="h-[197px] w-[350px] md:h-[250px] md:w-[700px] rounded-xl" />
+          <Skeleton className="h-[197px] w-[350px] md:h-[250px] md:w-[700px] rounded-xl" />
         </div>
       )}
 
-      <div className="h-20" />
+      <div className="h-8 md:h-20" />
 
-      <div className="w-96">
+      {/* <div className="w-96"> */}
+      <div className="w-80 md:w-96">
         <div>
           <Label>Points</Label>
 
@@ -148,7 +131,8 @@ export default function ChartSection() {
               : "[x, y] Array"}
           </p>
         </div>
-        <div className="w-96 mt-5">
+        {/* <div className="w-96 mt-5"> */}
+        <div className="mt-5">
           <div className="flex justify-between items-center">
             <Label>Iterations</Label>
             <p className="text-muted-foreground">{smoothIterations}</p>
@@ -167,6 +151,65 @@ export default function ChartSection() {
     </div>
   );
 }
+
+const Chart = ({
+  title,
+  dataSet,
+  variant,
+  isMobile,
+}: {
+  title: string;
+  dataSet: {
+    x: number;
+    y: number;
+  }[];
+  variant: "primary" | "destructive";
+  isMobile: boolean;
+}) => {
+  const width = isMobile ? 350 : 730;
+  const height = isMobile ? 197 : 250;
+
+  let style = {
+    stroke: "var(--theme-primary)",
+    "--theme-primary": "hsl(var(--primary))",
+  } as React.CSSProperties;
+
+  let activeDotStyle = {
+    r: 8,
+    style: { fill: "var(--theme-primary)" },
+  };
+
+  if (variant === "destructive") {
+    style = {
+      stroke: "var(--theme-destructive)",
+      "--theme-destructive": "hsl(var(--destructive))",
+    } as React.CSSProperties;
+
+    activeDotStyle = {
+      r: 8,
+      style: { fill: "#E71D36" },
+    };
+  }
+
+  return (
+    <LineChart width={width} height={height}>
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis dataKey="x" hide />
+      <YAxis />
+      <Tooltip />
+      <Line
+        type="linear"
+        data={dataSet}
+        dataKey="y"
+        name={title}
+        strokeWidth={2}
+        style={style}
+        activeDot={activeDotStyle}
+      />
+      <Legend />
+    </LineChart>
+  );
+};
 
 function handleStringPointsChange(
   stringPoints: string,
